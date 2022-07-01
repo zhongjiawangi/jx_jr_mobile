@@ -1,36 +1,59 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 
-Vue.use(VueRouter);
+Vue.use(VueRouter)
 
-const Layout = () => import("@/layout");
-const User = () => import("@/views/user");
-const Home = () => import("@/views/home");
+const Layout = () => import('@/layout')
+const User = () => import('@/views/user')
+const Home = () => import('@/views/home')
+const Query = () => import('@/views/query')
+const Search = () => import('@/views/home/view/search')
+const Main = () => import('@/views/home/view/main')
 
 const routes = [
-  {
-    path: "/",
-    name: "布局",
-    component: Layout,
-    redirect: '/home',
-    children: [
-      {
-        path: "/home",
-        name: "主页",
-        component: Home,
-        children: [],
-      },
-      {
-        path: "/user",
-        name: "用户",
-        component: User,
-      },
-    ],
-  },
-];
+    {
+        path: '/',
+        name: '布局',
+        component: Layout,
+        redirect: '/home',
+        children: [
+            {
+                path: '/home',
+                name: '主页',
+                component: Home,
+                redirect: '/home/main',
+                meta: {
+                    keepAlive: true,
+                },
+                children: [
+                    {
+                        path: '/home/main',
+                        name: '主页主体',
+                        component: Main,
+                    },
+                    {
+                        path: '/home/search',
+                        name: '项目搜索',
+                        component: Search,
+                    },
+                ],
+            },
+            {
+                path: '/user',
+                name: '用户',
+                component: User,
+            },
+            {
+                path: '/query',
+                name: '保函查询',
+                component: Query,
+            },
+        ],
+    },
+]
 
 const router = new VueRouter({
-  routes,
-});
+    routes,
+})
 
-export default router;
+export default router

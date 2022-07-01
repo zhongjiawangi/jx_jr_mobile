@@ -1,14 +1,15 @@
 <template>
-  <div class="home">
-    <router-view />
+  <div class="details">
+    招标详情
   </div>
 </template>
 
 <script>
 export default {
-  name: 'homePage',
+  name: 'detailPage'
 }
 </script>
 
 <style lang="less" scoped>
+
 </style>

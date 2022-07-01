@@ -1,14 +1,15 @@
 <template>
-  <div class="home">
-    <router-view />
+  <div class="query">
+    这里是保函查询界面
   </div>
 </template>
 
 <script>
 export default {
-  name: 'homePage',
+  name: 'queryPage'
 }
 </script>
 
 <style lang="less" scoped>
+
 </style>

@@ -68,7 +68,7 @@ export default {
     height: 40px;
     text-align: center;
     line-height: 40px;
-    background-color: pink;
+    background-color: rgb(25, 137, 250);
     position: fixed;
     z-index: 10;
   }

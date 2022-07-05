@@ -1,12 +1,12 @@
 <template>
-  <div class="user">
-      这里是user界面
+  <div class="myUser">
+      <router-view/>
   </div>
 </template>
 
 <script>
 export default {
-    name: 'userPage'
+    name: 'MyUser'
 }
 </script>
 

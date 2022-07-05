@@ -10,4 +10,8 @@ export default {
 </script>
 
 <style lang="less">
+#app {
+  height: 100vh;
+  background-color: rgb(247, 248, 250);
+}
 </style>

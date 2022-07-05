@@ -39,10 +39,7 @@
       </form>
     </div>
     <van-divider />
-    <div class="update" v-if="update">
-      <van-loading size="24px" type="spinner" color="#1989fa">加载中...</van-loading>
-    </div>
-    <div class="result_box" v-else>
+    <div class="result_box">
       <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
         <van-empty image="search" description="空空如也" v-if="info.length === 0" />
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" v-else>
@@ -60,7 +57,6 @@ export default {
   name: "searchPage",
   data() {
     return {
-      update: false,
       isLoading: false,
       loading: false,
       finished: false,
@@ -144,7 +140,11 @@ export default {
     },
     chooseHistory(item) {
       this.searchData.keyword = item
-      this.update = true;
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 1000
+      });
       setTimeout(() => {
         this.getList()
         this.update = false;
@@ -152,7 +152,11 @@ export default {
     },
     onSearch() {
       this.showHistory = false
-      this.update = true;
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 1000
+      });
       setTimeout(() => {
         this.getList()
         this.update = false;
@@ -163,14 +167,22 @@ export default {
     },
     changeCity(val) {
       this.searchData.city = val;
-      this.update = true;
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 1000
+      });
       setTimeout(() => {
         this.getList()
         this.update = false;
       }, 1000)
     },
     changeStatus() {
-      this.update = true;
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 1000
+      });
       setTimeout(() => {
         this.getList()
         this.update = false;
@@ -179,7 +191,12 @@ export default {
     changeType(name, title) {
       const result = this.projectList.find((item) => item.name === title)
       this.searchData.type = result.value
-      this.update = true
+      // this.update = true
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 1000
+      });
       setTimeout(() => {
         this.getList()
       }, 1000)
@@ -226,10 +243,17 @@ export default {
     }
   },
   created() {
-    for (let i = 0; i < 15; i++) {
-      this.index++
-      this.info.push(this.index)
-    }
+    this.$toast.loading({
+      message: '加载中...',
+      forbidClick: true,
+      duration: 1000
+    });
+    setTimeout(() => {
+      for (let i = 0; i < 15; i++) {
+        this.index++
+        this.info.push(this.index)
+      }
+    }, 1000)
   },
   components: { CityPicker, Project }
 }
@@ -242,7 +266,7 @@ export default {
     height: 40px;
     text-align: center;
     line-height: 40px;
-    background-color: pink;
+    background-color: rgb(25, 137, 250);
     position: fixed;
     z-index: 10;
   }

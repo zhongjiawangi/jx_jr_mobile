@@ -21,8 +21,14 @@ export default {
     };
   },
   created() {
-    if (this.$route.name === '用户') {
+    if (this.$route.path.search('user')) {
       this.active = 'user'
+    }
+    if (this.$route.path.search('query')) {
+      this.active = 'query'
+    }
+    if (this.$route.path.search('home')) {
+      this.active = 'home'
     }
   }
 }

@@ -1,15 +1,14 @@
 <template>
-  <div class="details">
-    招标详情
+  <div class="introduce">
+    项目介绍
   </div>
 </template>
 
 <script>
 export default {
-  name: 'detailPage'
+  name: 'projectIntroduce',
 }
 </script>
 
 <style lang="less" scoped>
-
 </style>

@@ -29,6 +29,7 @@ register.interceptors.response.use(
     const _data = response.data;
     let Result = "";
     const { code, message } = _data;
+    console.log(_data);
     if (code == 401 || String(code).includes("403")) {
       Notify(message);
       Result = Promise.reject(_data.data);

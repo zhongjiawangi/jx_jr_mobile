@@ -1,49 +1,56 @@
 <template>
   <div class="main">
-      <div class="tab">
-        <div class="staus_box">
-          <van-button icon="search" round @click="jumpSearch"/>
-          <van-tabs @click="changeStatus">
-            <van-tab v-for="(item, index) in searchList" :key="index" :title="item.name"></van-tab>
-          </van-tabs>
-        </div>
-        <div class="type_box">
-          <van-tabs @click="changeType">
-            <van-tab v-for="(item, index) in projectList" :key="index" :title="item.name"></van-tab>
-          </van-tabs>
-        </div>
-        <div class="notic">
-          <van-notice-bar left-icon="volume-o" :scrollable="false" background="#fff" color="#000" @click="click">
-            <van-swipe vertical class="notice-swipe" :autoplay="3000" :show-indicators="false">
-              <van-swipe-item>内容 1</van-swipe-item>
-              <van-swipe-item>内容 2</van-swipe-item>
-              <van-swipe-item>内容 3</van-swipe-item>
-            </van-swipe>
-          </van-notice-bar>
-        </div>
+    <div style="height: 40px">
+      <div class="top">这里是标题</div>
+    </div>
+    <div class="tab">
+      <div class="staus_box">
+        <van-button icon="search" round @click="jumpSearch" />
+        <van-tabs @click="changeStatus">
+          <van-tab v-for="(item, index) in statusList" :key="index" :title="item.name"></van-tab>
+        </van-tabs>
       </div>
-      <!-- <div v-for="item in 100" :key="item">
-      <Acticle/>
-    </div> -->
-      <div class="update" v-if="update">
-        <van-loading size="24px" type="spinner" color="#1989fa">加载中...</van-loading>
+      <div class="type_box">
+        <van-tabs @click="changeType">
+          <van-tab v-for="(item, index) in projectList" :key="index" :title="item.name"></van-tab>
+        </van-tabs>
       </div>
-      <div class="contant" v-else>
-        <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh" style="min-height: 100vh;">
-          <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-            <Acticle v-for="item in count" :key="item" />
-          </van-list>
-        </van-pull-refresh>
+
+      <div class="city_box">
+        <CityPicker @changeCity="changeCity" />
       </div>
+      <div class="notic">
+        <van-notice-bar left-icon="volume-o" :scrollable="false" background="#fff" color="#000" @click="click">
+          <van-swipe vertical class="notice-swipe" :autoplay="3000" :show-indicators="false">
+            <van-swipe-item>内容 1</van-swipe-item>
+            <van-swipe-item>内容 2</van-swipe-item>
+            <van-swipe-item>内容 3</van-swipe-item>
+          </van-swipe>
+        </van-notice-bar>
+      </div>
+    </div>
+    <div class="update" v-if="update">
+      <van-loading size="24px" type="spinner" color="#1989fa">加载中...</van-loading>
+    </div>
+    <div class="contant" v-else>
+      <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
+        <van-empty image="search" description="空空如也" v-if="info.length === 0" />
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" v-else>
+          <Acticle v-for="item in info" :key="item" />
+        </van-list>
+      </van-pull-refresh>
+    </div>
   </div>
 </template>
 
 <script>
 import Acticle from '@/views/home/components/project.vue'
+import CityPicker from '../../components/cityPicker.vue';
 export default {
   name: 'mainPage',
   components: {
-    Acticle
+    Acticle,
+    CityPicker
   },
   data() {
     return {
@@ -52,7 +59,9 @@ export default {
       isLoading: false,
       loading: false,
       finished: false,
-      searchList: [
+      index: 0,
+      info: [],
+      statusList: [
         {
           name: '全部',
           value: 'all'
@@ -109,12 +118,21 @@ export default {
         },
       ],
       searchData: {
+        city: '',
         status: 'all',
         type: '1'
       }
     }
   },
   methods: {
+    changeCity(value) {
+      this.searchData.city = value;
+      this.update = true;
+      setTimeout(() => {
+        this.update = false
+        this.getList()
+      }, 1000)
+    },
     jumpSearch() {
       this.$router.push({ path: '/home/search' })
     },
@@ -125,7 +143,7 @@ export default {
     onRefresh() {
       setTimeout(() => {
         this.isLoading = false;
-        this.count++
+        this.getList(true)
       }, 1000);
     },
     // 加载更多
@@ -136,14 +154,13 @@ export default {
         }
         this.getList()
         this.loading = false;
-
-        if (this.count >= 40) {
+        if (this.info.length >= 60) {
           this.finished = true;
         }
       }, 1000);
     },
     changeStatus(name, title) {
-      const result = this.searchList.find((item) => item.name === title)
+      const result = this.statusList.find((item) => item.name === title)
       this.searchData.status = result.value
       this.update = true
       setTimeout(() => {
@@ -158,21 +175,46 @@ export default {
         this.getList()
       }, 1000)
     },
-    getList() {
+    getList(isDropDown = false) {
       const data = Object.assign(this.searchData)
-      this.count += 10
+      if (isDropDown) {
+        this.info = []
+        for (let i = 0; i < 15; i++) {
+          this.index++
+          this.info.unshift(this.index)
+        }
+      } else {
+        for (let i = 0; i < 15; i++) {
+          this.index++
+          this.info.push(this.index)
+        }
+      }
       this.update = false
       console.log(data);
     }
   },
   created() {
     // console.log(this.$route);
+    for (let i = 0; i < 15; i++) {
+      this.index++
+      this.info.push(this.index)
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
 .main {
+  .top {
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    background-color: pink;
+    position: fixed;
+    z-index: 10;
+  }
+
   .staus_box {
     display: flex;
     justify-content: center;
@@ -183,6 +225,11 @@ export default {
       height: 35px;
       margin-left: 5px;
     }
+  }
+
+  .city_b1ox {
+    border-bottom: 1px solid #000;
+    border-top: 1px solid #000;
   }
 
   .update {

@@ -9,6 +9,7 @@ const Home = () => import('@/views/home')
 const Query = () => import('@/views/query')
 const Search = () => import('@/views/home/view/search')
 const Main = () => import('@/views/home/view/main')
+const Detail = () => import('@/views/home/view/detail')
 
 const routes = [
     {
@@ -35,6 +36,11 @@ const routes = [
                         path: '/home/search',
                         name: '项目搜索',
                         component: Search,
+                    },
+                    {
+                        path: '/home/detail',
+                        name: '项目详情',
+                        component: Detail,
                     },
                 ],
             },

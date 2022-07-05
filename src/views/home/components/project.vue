@@ -1,5 +1,5 @@
 <template>
-  <div class="project">
+  <div class="project" @click="goInfo(info.name)">
     <div class="top">
       <div class="left">
         <img src="@/assets/logo.png" alt="">
@@ -54,6 +54,16 @@ export default {
         }
       }
     }
+  },
+  methods: {
+    goInfo(info) {
+      this.$router.push({
+        path: '/home/detail',
+        query: {
+          name: info
+        }
+      })
+    }
   }
 }
 </script>
@@ -87,6 +97,7 @@ export default {
         display: flex;
         font-size: 10px;
         color: #999;
+
         .tender_time {
           color: orange;
         }

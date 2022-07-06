@@ -1,6 +1,7 @@
 <template>
   <div class="bids">
-    开标详情
+    <!-- 开标详情 -->
+    <van-empty image="search" description="空空如也" />
   </div>
 </template>
 

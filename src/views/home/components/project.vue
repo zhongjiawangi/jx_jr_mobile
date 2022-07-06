@@ -11,22 +11,28 @@
           <i>{{ info.status }}</i>
         </div>
         <div class="time">
-          <span>公示时间：{{ info.publicationTime }}</span>
-          <span class="tender_time">开标时间：{{ info.tenderTime }}</span>
+          <div>
+            公示时间：
+            <p>{{ info.publicationTime || '--' }}</p>
+          </div>
+          <div class="tender_time">
+            开标时间：
+            <p>{{ info.tenderTime }}</p>
+          </div>
         </div>
       </div>
     </div>
     <div class="contant">
       <div>
-        <h3>{{ info.name }}</h3>
+        <h3>{{ info.projectName || '--' }}</h3>
       </div>
-      <div>企业资质: {{ info.aptitude }}</div>
-      <div>建造师等级: {{ info.builderLevel }}</div>
+      <div>企业资质: {{ info.aptitude || '--' }}</div>
+      <div>建造师等级: {{ info.builderLevel || '--' }}</div>
       <div>
-        <span>审查方式: {{ info.censorType }}</span>
-        <span>项目投资: {{ info.investment }}</span>
+        <span>审查方式: {{ info.censorType || '--' }}</span>
+        <span>项目投资: {{ info.investment || '--' }}</span>
       </div>
-      <div>招标单位: {{ info.biddingUnits }}</div>
+      <div>招标单位: {{ info.biddingUnits || '--' }}</div>
     </div>
     <van-divider />
   </div>
@@ -45,12 +51,12 @@ export default {
           status: '状态',
           publicationTime: '2022-07-01 00:00:00',
           tenderTime: '2022-8-1 00:00:00',
-          name: '这里是项目名称',
-          aptitude: '资质',
-          builderLevel: '建造师等级',
-          censorType: '审查方式',
-          investment: '项目投资',
-          biddingUnits: '招标单位'
+          projectName: '',
+          aptitude: '',
+          builderLevel: '',
+          censorType: '',
+          investment: '',
+          biddingUnits: ''
         }
       }
     }
@@ -71,6 +77,7 @@ export default {
 <style lang="less" scoped>
 .project {
   margin: 20px 10px;
+  font-size: 16px;
 
   .top {
     display: flex;
@@ -84,7 +91,7 @@ export default {
 
     .right {
       flex: 1;
-      font-size: 18px;
+      font-size: 16px;
 
       .type {
         display: flex;
@@ -95,6 +102,7 @@ export default {
 
       .time {
         display: flex;
+        justify-content: space-between;
         font-size: 10px;
         color: #999;
 
@@ -106,10 +114,19 @@ export default {
   }
 
   .contant {
-    color: #333;
+    color: #888;
+    font-size: 15px;
+
+    h3 {
+      font-size: 18px;
+      font-weight: 400;
+      color: #333;
+    }
 
     div {
       margin: 5px 0;
+      display: flex;
+      justify-content: space-between;
     }
   }
 }

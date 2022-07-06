@@ -1,8 +1,5 @@
 <template>
   <div class="query">
-    <!-- <div style="height: 40px">
-      <div class="top">保函查询</div>
-    </div> -->
     <van-nav-bar title="保函查询" />
     <div class="search_box">
       <van-tabs v-model="active" animated type="card" @change="change" color="rgb(25, 137, 250)">
@@ -210,15 +207,6 @@ export default {
 
 <style lang="less" scoped>
 .query {
-  .top {
-    width: 100%;
-    height: 40px;
-    text-align: center;
-    line-height: 40px;
-    background-color: rgb(25, 137, 250);
-    position: fixed;
-    z-index: 10;
-  }
 
   .search_box {
     /deep/.van-tabs__nav--card {

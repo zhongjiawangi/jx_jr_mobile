@@ -13,5 +13,6 @@ export default {
 #app {
   height: 100vh;
   background-color: rgb(247, 248, 250);
+  font-size: 16px;
 }
 </style>

@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     projectInfo: [],
+    userInfo: localStorage.getItem('userinfo') || ''
   },
   getters: {},
   mutations: {

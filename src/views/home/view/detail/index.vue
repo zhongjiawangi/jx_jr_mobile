@@ -1,12 +1,26 @@
 <template>
   <div class="detail">
-    <div style="height: 50px">
-      <div class="top">
-        <van-nav-bar title="项目详情" left-text="返回" left-arrow @click-left="onClickLeft" />
+    <van-nav-bar title="项目详情" left-text="返回" left-arrow @click-left="onClickLeft" />
+    <div class="info_box">
+      <p>{{ info.name || '项目名称' }}</p>
+      <div class="simpleInfo">
+        <div class="left">
+          <div class="img">
+            <img src="@/assets/logo.png" alt="">
+          </div>
+          <div class="contant">
+            <div>
+              <span>{{ info.type || '项目类型' }}</span><span>【{{ info.area || '地区' }}】</span>
+            </div>
+            <div>公示时间：{{ info.time || '2022.12.12 00:00:00' }}</div>
+          </div>
+        </div>
+        <div :class="like ? 'like operation' : 'operation'" @click="changeLike">
+          <van-icon :name="like ? 'star' : 'star-o'" />
+          <span>收藏</span>
+          <!-- <van-switch v-model="checked" @change="changeLike" size="24px"/> -->
+        </div>
       </div>
-    </div>
-    <div class="simpleInfo">
-      项目简介
     </div>
     <div class="tab">
       <van-tabs v-model="active" animated>
@@ -30,6 +44,7 @@ export default {
     return {
       info: [],
       active: '0',
+      like: false,
       tabList: [
         {
           title: '项目介绍',
@@ -54,6 +69,19 @@ export default {
     onClickLeft() {
       this.$router.go(-1);
     },
+    changeLike() {
+      this.like = !this.like;
+      if (this.like) {
+        /**
+         * 绑定账号
+         */
+        return this.$toast.success('已收藏')
+      }
+      /**
+       * 解绑
+       */
+      this.$toast.fail('取消收藏')
+    }
   },
   created() {
     console.log(this.$route);
@@ -63,14 +91,52 @@ export default {
 
 <style lang="less" scoped>
 .detail {
-  .top {
-    width: 100%;
-    height: 40px;
-    text-align: center;
-    line-height: 40px;
-    background-color: rgb(25, 137, 250);
-    position: fixed;
-    z-index: 10;
+  .info_box {
+    padding: 10px 15px 0;
+    background-color: #fff;
+    border-bottom: 1px solid #dedede;
+
+  }
+
+  .simpleInfo {
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left {
+      display: flex;
+      align-items: center;
+
+      img {
+        width: 50px;
+        border-radius: 50%;
+      }
+
+      .contant {
+        margin-left: 20px;
+        font-size: 12px;
+        color: #999;
+
+        span {
+          font-size: 14px;
+          color: #333;
+          margin-right: 20px;
+        }
+
+        div {
+          margin: 5px 0;
+        }
+      }
+    }
+
+    .operation {
+      text-align: center;
+    }
+
+    .like {
+      color: rgb(25, 152, 251)
+    }
   }
 }
 </style>

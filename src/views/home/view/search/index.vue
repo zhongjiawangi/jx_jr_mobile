@@ -143,24 +143,24 @@ export default {
       this.$toast.loading({
         message: '加载中...',
         forbidClick: true,
-        duration: 1000
+        duration: 500
       });
       setTimeout(() => {
         this.getList()
         this.update = false;
-      }, 1000)
+      }, 500)
     },
     onSearch() {
       this.showHistory = false
       this.$toast.loading({
         message: '加载中...',
         forbidClick: true,
-        duration: 1000
+        duration: 500
       });
       setTimeout(() => {
         this.getList()
         this.update = false;
-      }, 1000)
+      }, 500)
     },
     onCancel() {
       this.keyword = "";
@@ -170,23 +170,23 @@ export default {
       this.$toast.loading({
         message: '加载中...',
         forbidClick: true,
-        duration: 1000
+        duration: 500
       });
       setTimeout(() => {
         this.getList()
         this.update = false;
-      }, 1000)
+      }, 500)
     },
     changeStatus() {
       this.$toast.loading({
         message: '加载中...',
         forbidClick: true,
-        duration: 1000
+        duration: 500
       });
       setTimeout(() => {
         this.getList()
         this.update = false;
-      }, 1000)
+      }, 500)
     },
     changeType(name, title) {
       const result = this.projectList.find((item) => item.name === title)
@@ -195,11 +195,11 @@ export default {
       this.$toast.loading({
         message: '加载中...',
         forbidClick: true,
-        duration: 1000
+        duration: 500
       });
       setTimeout(() => {
         this.getList()
-      }, 1000)
+      }, 500)
     },
     onClickLeft() {
       this.$router.go(-1);
@@ -209,7 +209,7 @@ export default {
       setTimeout(() => {
         this.isLoading = false;
         this.getList(true)
-      }, 1000);
+      }, 500);
     },
     // 加载更多
     onLoad() {
@@ -222,7 +222,7 @@ export default {
         if (this.info.length >= 60) {
           this.finished = true;
         }
-      }, 1000);
+      }, 500);
     },
     getList(isDropDown = false) {
       const data = Object.assign(this.searchData)
@@ -246,14 +246,14 @@ export default {
     this.$toast.loading({
       message: '加载中...',
       forbidClick: true,
-      duration: 1000
+      duration: 500
     });
     setTimeout(() => {
       for (let i = 0; i < 15; i++) {
         this.index++
         this.info.push(this.index)
       }
-    }, 1000)
+    }, 500)
   },
   components: { CityPicker, Project }
 }

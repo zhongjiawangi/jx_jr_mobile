@@ -21,17 +21,13 @@ export default {
     };
   },
   mounted() {
-    // console.log(this.$route.path.search('user'), '------');
-    // console.log(this.$route.path.search('query'), '------');
-    // console.log(this.$route.path.search('home'), '------');
-    console.log(-1 && true);
-    if (this.$route.path.search('user') === 1) {
+    if (this.$route.path.search('user') !== -1) {
       this.active = 'user'
     }
-    if (this.$route.path.search('query') === 1) {
+    if (this.$route.path.search('query') !== -1) {
       this.active = 'query'
     }
-    if (this.$route.path.search('home') === 1) {
+    if (this.$route.path.search('home') !== -1) {
       this.active = 'home'
     }
   }

@@ -1,6 +1,6 @@
 <template>
     <div class="notice">
-        <van-nav-bar title="公告列表" left-text="返回" left-arrow @click-left="onClickLeft" />
+        <van-nav-bar title="公告详情" left-text="返回" left-arrow @click-left="onClickLeft" />
         <div class="container">
             <h3>{{ notice.title }}</h3>
             <van-cell title="时间" :value="notice.time" />

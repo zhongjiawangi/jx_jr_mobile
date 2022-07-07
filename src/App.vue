@@ -11,7 +11,7 @@ export default {
 
 <style lang="less">
 #app {
-  height: 100vh;
+  min-height: 100vh;
   background-color: rgb(247, 248, 250);
   font-size: 16px;
 }

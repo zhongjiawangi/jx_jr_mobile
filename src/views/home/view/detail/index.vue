@@ -75,12 +75,18 @@ export default {
         /**
          * 绑定账号
          */
-        return this.$toast.success('已收藏')
+        return this.$toast.success({
+          message: '已收藏',
+          duration: 500
+        })
       }
       /**
        * 解绑
        */
-      this.$toast.fail('取消收藏')
+      this.$toast.fail({
+        message: '取消收藏',
+        duration: 500
+      })
     }
   },
   created() {

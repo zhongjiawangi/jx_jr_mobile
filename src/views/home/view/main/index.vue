@@ -223,7 +223,7 @@ export default {
         limit: this.limit
       }
       const data = Object.assign(obj, this.searchData)
-      console.log(data);
+      // console.log(data);
       // 获取数据
       if (isDropDown) {
         this.info = []
@@ -237,6 +237,7 @@ export default {
           this.info.push(this.index)
         }
       }
+      return data
     }
   },
   created() {
@@ -286,6 +287,7 @@ export default {
 
   .notice {
     position: relative;
+
     .more_notice {
       position: absolute;
       padding-right: 30px;
@@ -294,6 +296,7 @@ export default {
       transform: translateY(-50%);
       font-size: 14px;
     }
+
     .more_notice:after {
       content: '';
       display: inline-block;
@@ -303,6 +306,7 @@ export default {
       border-right: 1px solid #000;
       transform: rotate(45deg);
     }
+
     /deep/.van-notice-bar__content.van-ellipsis {
       width: 100%;
     }

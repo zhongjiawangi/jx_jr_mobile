@@ -76,8 +76,13 @@ export default {
 
 <style lang="less" scoped>
 .project {
-  margin: 20px 10px;
+  margin: 10px;
+  padding: 10px;
   font-size: 16px;
+  border: 1px solid #dedede;
+  border-radius: 5px;
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, .1);
+
 
   .top {
     display: flex;

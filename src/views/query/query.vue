@@ -142,8 +142,6 @@ export default {
           if (res.data.code === 1) {
             return this.$toast.fail(res.data.message)
           }
-          // this.info = res.data.data
-          // this.$store.commit('changeInfo', res.data.data)
           const data = JSON.stringify(res.data.data)
           sessionStorage.setItem('projectInfo', data)
           this.$router.push({

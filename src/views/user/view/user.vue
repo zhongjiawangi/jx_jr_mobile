@@ -9,14 +9,14 @@
             <van-image round width="60px" height="60px" :src="userInfo.photo || 'https://img01.yzcdn.cn/vant/cat.jpeg'"
               fit="cover" />
             <span class="custom-title" v-if="!isLogin">登录/注册</span>
-            <span class="custom-title" v-else>{{ info.username }}</span>
+            <span class="custom-title" v-else>{{ userInfo.username }}</span>
           </div>
         </template>
       </van-cell>
       <!-- 用户信息弹窗 -->
       <van-popup v-model="showInfo" position="left" closeable :style="{ width: '100%', height: '100%' }">
         <div class="info_box">
-          <van-cell v-for="(item, key) in infoList" :key="key" :title="item" is-link :value="userInfo[key]"
+          <van-cell v-for="(item, key) in infoListDic" :key="key" :title="item" is-link :value="userInfo[key]"
             @click="upDate(key)" />
           <div style="width: 100%; text-align: center;margin-top: 150px;">
             <van-button type="danger" round @click="logout">退出登录</van-button>
@@ -31,8 +31,8 @@
             <van-picker v-if="keyword === 'sex'" show-toolbar :columns="columns" @cancel="showSexPop = false"
               @confirm="onConfirm" />
             <div v-else>
-              <van-field :label="infoList[keyword]" :placeholder="`请填写${infoList[keyword]}`" :autofocus="true"
-                @blur="onBlur">
+              <van-field v-model="value" :label="infoListDic[keyword]" :placeholder="`请填写${infoListDic[keyword]}`"
+                @blur="onBlur" clearable autofocus>
                 <template #button>
                   <van-button size="small" type="primary" @click="onUpdate">确认</van-button>
                 </template>
@@ -65,6 +65,7 @@ export default {
   data() {
     return {
       keyword: '',
+      value: '',
       show: false,
       showContant: false,
       showInfo: false,
@@ -72,17 +73,8 @@ export default {
       update: false,
       isLogin: localStorage.getItem('token') && true,
       columns: ['男', '女'],
-      userInfo: {
-        photo: '',
-        nickname: '',
-        name: '',
-        sex: '',
-        job: '',
-        address: '',
-        telephone: '',
-      },
-      infoList:
-      {
+      userInfo: '',
+      infoListDic: {
         photo: '我的头像',
         nickname: '昵称',
         name: '姓名',
@@ -95,9 +87,12 @@ export default {
   },
   computed: {},
   methods: {
-    onBlur(e) {
+    onBlur() {
       // 更新数据
-      this.userInfo[this.keyword] = e.target.value;
+      if (this.value) {
+        this.userInfo[this.keyword] = this.value;
+        this.value = '';
+      }
     },
     afterRead(file) {
       // 此时可以自行将文件上传至服务器
@@ -112,7 +107,7 @@ export default {
         //   forbidClick: true,
         //   message: '你还没登陆',
         // });
-        this.$router.push({ path: '/user/login' })
+        this.$router.push({ path: '/login' })
       }
     },
     onUpdate() {
@@ -146,9 +141,8 @@ export default {
   created() {
     // console.log(window.devicePixelRatio);
     if (this.isLogin) {
-      this.info = JSON.parse(localStorage.getItem('userinfo'))
+      this.userInfo = JSON.parse(localStorage.getItem('userinfo'))
     }
-    console.log((this.userInfo.photo || 'https://img01.yzcdn.cn/vant/cat.jpeg'));
   }
 }
 </script>

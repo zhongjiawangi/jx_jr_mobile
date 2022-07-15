@@ -1,9 +1,9 @@
 <template>
   <div class="layout">
-    <keep-alive include="HomePage">
-      <router-view />
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
-
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
     <van-tabbar v-model="active" :placeholder="true" router>
       <van-tabbar-item replace to="/home" name="home" icon="wap-home">主页</van-tabbar-item>
       <van-tabbar-item replace to="/query" name="query" icon="search">保函查询</van-tabbar-item>

@@ -1,8 +1,5 @@
 <template>
   <div class="main">
-    <!-- <div style="height: 40px">
-      <div class="top">这里是标题</div>
-    </div> -->
     <van-nav-bar title="这里是标题" />
     <div class="tab">
       <div class="staus_box">
@@ -33,6 +30,11 @@
         <div class="more_notice" @click="moreNotice">更多公告</div>
       </div>
     </div>
+    <div class="LOI_box">
+      <div v-for="(item, index) in LOI" :key="index" class="item" @click="goLOI(item)">
+        {{ item.name }}
+      </div>
+    </div>
     <div class="contant">
       <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
         <van-empty image="search" description="空空如也" v-if="info.length === 0" style="min-height: 60vh;" />
@@ -58,6 +60,7 @@ export default {
       page: 1,
       limit: 10,
       isLoading: false,
+      isAlive: false,
       loading: false,
       finished: false,
       index: 0,
@@ -132,14 +135,38 @@ export default {
           value: '5'
         },
       ],
+      LOI: [
+        {
+          name: '履约保函',
+          value: '',
+          icon: '',
+          type: 'performance'
+        },
+        {
+          name: '农民工保函',
+          value: '',
+          icon: '',
+          type: 'farmersWork'
+        },
+      ],
       searchData: {
         city: '',
         status: 'all',
         type: '1'
-      }
+      },
+      scrollTop: 0
     }
   },
   methods: {
+    goLOI(item) {
+      this.$router.push({
+        path: '/home/loi',
+        query: {
+          name: item.name,
+          type: item.type
+        }
+      })
+    },
     moreNotice() {
       this.$router.push({ path: "/home/noticeList" })
     },
@@ -158,6 +185,7 @@ export default {
         forbidClick: true,
         duration: 500
       });
+      console.log(1);
       setTimeout(() => {
         this.page = 1
         this.getList()
@@ -238,14 +266,30 @@ export default {
         }
       }
       return data
+    },
+  },
+  watch: {
+    isAlive(newVal) {
+      console.log(newVal);
     }
   },
   created() {
-    this.$toast.loading({
-      message: '加载中...',
-      forbidClick: true,
-      duration: 500
-    });
+    if (!this.isAlive) {
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 500
+      });
+      this.getList()
+    }
+  },
+  activated() {
+    window.scroll(0, this.scrollTop)
+  },
+  beforeRouteLeave(to, from, next) {
+    this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+    this.isAlive = true
+    next()
   },
 }
 </script>
@@ -309,6 +353,23 @@ export default {
 
     /deep/.van-notice-bar__content.van-ellipsis {
       width: 100%;
+    }
+  }
+
+  .LOI_box {
+    display: flex;
+    margin: 20px 0;
+
+    .item {
+      flex: 1;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0px 2px 12px rgba(0, 0, 0, .1);
+      border-radius: 5px;
+      border: 1px solid #dedede;
+      margin: 0 10px;
     }
   }
 }

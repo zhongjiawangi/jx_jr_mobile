@@ -8,7 +8,7 @@
       <van-dropdown-item v-model="value" :options="columns" @change="changeCity" />
     </van-dropdown-menu> -->
     <!-- <van-cascader v-model="city" title="请选择所在地区" :options="cityList" :field-names="fieldNames" /> -->
-    <van-field v-model="fieldValue" is-link readonly label="地区" placeholder="请选择所在地区" @click="show = true" />
+    <van-field v-model="fieldValue" is-link readonly :label="label" placeholder="请选择所在地区" @click="show = true" />
     <van-popup v-model="show" round position="bottom">
       <van-cascader v-model="city" title="请选择所在地区" :options="cityList" :field-names="fieldNames" @close="show = false"
         @finish="onFinish" />
@@ -20,6 +20,11 @@
 import cityJson from '@/utils/jsCity.js'
 export default {
   name: "cityPicker",
+  props: {
+    label: {
+      default: "地区",
+    }
+  },
   data() {
     return {
       value: 0,
@@ -54,7 +59,7 @@ export default {
     },
   },
   created() {
-    this.$emit('changeCity', this.city)
+    // this.$emit('changeCity', this.city)
   }
 }
 </script>

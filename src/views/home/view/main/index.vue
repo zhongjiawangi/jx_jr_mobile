@@ -39,7 +39,7 @@
       <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
         <van-empty image="search" description="空空如也" v-if="info.length === 0" style="min-height: 60vh;" />
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" v-else>
-          <Acticle v-for="item in info" :key="item" />
+          <Acticle v-for="item in info" :key="item.id" :info="item" />
         </van-list>
       </van-pull-refresh>
     </div>
@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { getProjectList, } from '@/api/index.js'
 import Acticle from '@/views/home/components/project.vue'
 import CityPicker from '../../components/cityPicker.vue';
 export default {
@@ -60,7 +61,6 @@ export default {
       page: 1,
       limit: 10,
       isLoading: false,
-      isAlive: false,
       loading: false,
       finished: false,
       index: 0,
@@ -157,6 +157,13 @@ export default {
       scrollTop: 0
     }
   },
+  watch: {
+    info() {
+      if (this.info.length >= 40) {
+        this.finished = true;
+      }
+    }
+  },
   methods: {
     goLOI(item) {
       this.$router.push({
@@ -185,8 +192,8 @@ export default {
         forbidClick: true,
         duration: 500
       });
-      console.log(1);
       setTimeout(() => {
+        this.info = []
         this.page = 1
         this.getList()
       }, 500)
@@ -208,16 +215,31 @@ export default {
     // 加载更多
     onLoad() {
       setTimeout(() => {
-        if (this.refreshing) {
-          this.refreshing = false;
+        if (this.isLoading) {
+          return;
         }
         this.page++
         this.getList()
+
+        // 加载状态结束
         this.loading = false;
-        if (this.info.length >= 60) {
+
+        // 数据全部加载完成
+        if (this.info.length >= 40) {
           this.finished = true;
         }
-      }, 500);
+      }, 1000);
+      // setTimeout(() => {
+      //   if (this.refreshing) {
+      //     this.refreshing = false;
+      //   }
+      //   this.page++
+      //   this.getList()
+      //   this.loading = false;
+      //   if (this.info.length >= 60) {
+      //     this.finished = true;
+      //   }
+      // }, 500);
     },
     changeStatus(name, title) {
       const result = this.statusList.find((item) => item.name === title)
@@ -228,6 +250,7 @@ export default {
         duration: 500
       });
       setTimeout(() => {
+        this.info = []
         this.page = 1
         this.getList()
       }, 500)
@@ -241,6 +264,7 @@ export default {
         duration: 500
       });
       setTimeout(() => {
+        this.info = []
         this.page = 1
         this.getList()
       }, 500)
@@ -253,42 +277,41 @@ export default {
       const data = Object.assign(obj, this.searchData)
       // console.log(data);
       // 获取数据
-      if (isDropDown) {
-        this.info = []
-        for (let i = 0; i < 15; i++) {
-          this.index++
-          this.info.unshift(this.index)
+      getProjectList(data).then((res) => {
+        if (isDropDown) {
+          this.info = res
+        } else {
+          this.info = [...this.info, ...res]
         }
-      } else {
-        for (let i = 0; i < 15; i++) {
-          this.index++
-          this.info.push(this.index)
-        }
-      }
-      return data
+      })
+      // if (isDropDown) {
+      //   this.info = []
+      //   for (let i = 0; i < 15; i++) {
+      //     this.index++
+      //     this.info.unshift(this.index)
+      //   }
+      // } else {
+      //   for (let i = 0; i < 15; i++) {
+      //     this.index++
+      //     this.info.push(this.index)
+      //   }
+      // }
+      return isDropDown
     },
   },
-  watch: {
-    isAlive(newVal) {
-      console.log(newVal);
-    }
-  },
   created() {
-    if (!this.isAlive) {
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 500
-      });
-      this.getList()
-    }
+    this.$toast.loading({
+      message: '加载中...',
+      forbidClick: true,
+      duration: 500
+    });
+    this.getList()
   },
   activated() {
     window.scroll(0, this.scrollTop)
   },
   beforeRouteLeave(to, from, next) {
     this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-    this.isAlive = true
     next()
   },
 }

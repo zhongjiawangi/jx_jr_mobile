@@ -20,14 +20,27 @@ export default {
       active: '',
     };
   },
+  // watch: {
+  //   $route(to) {
+  //     if (/^\/user/.test(to.path)) {
+  //       this.active = 'user'
+  //     }
+  //     if (/^\/query/.test(to.path)) {
+  //       this.active = 'query'
+  //     }
+  //     if (/^\/home/.test(to.path)) {
+  //       this.active = 'home'
+  //     }
+  //   }
+  // },
   mounted() {
-    if (this.$route.path.search('user') !== -1) {
+    if (/^\/user/.test(this.$route.path)) {
       this.active = 'user'
     }
-    if (this.$route.path.search('query') !== -1) {
+    if (/^\/query/.test(this.$route.path)) {
       this.active = 'query'
     }
-    if (this.$route.path.search('home') !== -1) {
+    if (/^\/home/.test(this.$route.path)) {
       this.active = 'home'
     }
   }

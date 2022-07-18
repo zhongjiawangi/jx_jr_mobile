@@ -6,9 +6,9 @@
       </div>
       <div class="right">
         <div class="type">
-          <span>{{ info.type }}</span>
+          <span>{{ info.type.name }}</span>
           <b>{{ `【${info.area}】` }}</b>
-          <i>{{ info.status }}</i>
+          <i>{{ info.status.name }}</i>
         </div>
         <div class="time">
           <div>

@@ -29,7 +29,7 @@ register.interceptors.response.use(
     const _data = response.data;
     let Result = "";
     const { code, message } = _data;
-    console.log(_data);
+    // console.log(_data);
     if (code == 401 || String(code).includes("403")) {
       Notify(message);
       Result = Promise.reject(_data.data);
@@ -48,7 +48,7 @@ register.interceptors.response.use(
 const servies = (methods, url, data) => {
   // 去除空参数
   if (methods !== "post") {
-    if (!data) return;
+    // if (!data) return;
     for (let key in data) {
       if (!data.key) {
         delete data[key];
@@ -61,14 +61,15 @@ const servies = (methods, url, data) => {
       data[key] = data[key].trim();
     }
   }
-  let Result = "";
+  let res = "";
   if (methods === "get") {
-    Result = register.get(url, { params: data });
+    res = register.get(url, { params: data });
   }
   if (methods === "post") {
-    Result = register.post(url, data);
+    res = register.post(url, data);
   }
-  return Result;
+  // console.log(Result);
+  return res;
 };
 
 export default servies;

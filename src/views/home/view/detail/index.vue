@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { getProjectInfo, } from '@/api/index.js'
 import Introduce from '@/views/home/components/introduce.vue'
 import Announcement from '@/views/home/components/announcement.vue'
 import Publicity from '@/views/home/components/publicity.vue'
@@ -87,10 +88,17 @@ export default {
         message: '取消收藏',
         duration: 500
       })
+    },
+    getProjectInfo() {
+      getProjectInfo().then((res) => {
+        console.log(res);
+        // this.info = res
+      })
     }
   },
   created() {
-    console.log(this.$route);
+    // console.log(this.$route);
+    window.scroll(0, 0);
   }
 }
 </script>

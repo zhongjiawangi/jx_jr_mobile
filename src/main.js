@@ -6,6 +6,7 @@ import Vant from 'vant';
 import 'vant/lib/index.css';
 import '@/css/common.css'
 import 'amfe-flexible'
+import '@/api/mock/index.js'
 
 Vue.use(Vant);
 

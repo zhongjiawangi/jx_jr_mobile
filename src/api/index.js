@@ -1,3 +1,10 @@
-import servies from '@/utils/register';
+import servies from "@/utils/register";
 
-export const test = (data) => servies('post', '/test', data)
+//用户信息
+export const getUserInfo = (data) =>
+  servies("get", "/user/userinfo", { params: data });
+//项目列表
+export const getProjectList = (data) => servies("post", "/project_list", data);
+//项目信息
+export const getProjectInfo = (data) =>
+  servies("get", "/projectinfo", { params: data });

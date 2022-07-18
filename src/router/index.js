@@ -35,9 +35,6 @@ const routes = [
         path: "/home",
         name: "主页",
         component: Home,
-        meta: {
-          keepAlive: true,
-        },
         redirect: "/home/main",
         children: [
           {

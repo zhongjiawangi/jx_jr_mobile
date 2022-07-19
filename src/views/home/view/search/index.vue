@@ -2,7 +2,7 @@
   <div class="search">
     <div style="height: 40px">
       <div class="top">
-        <van-nav-bar title="标题" left-text="返回" left-arrow @click-left="onClickLeft" />
+        <van-nav-bar title="招标查询" left-text="返回" left-arrow @click-left="onClickLeft" />
       </div>
     </div>
     <div class="search_box">
@@ -19,7 +19,7 @@
               <img src="@/assets/img/home/delete.png" @click.stop="delHistory(item)" class="del_btn" alt="">
             </li>
           </ul>
-          <div v-if="historyList.length" @click="historyList = []">全部删除</div>
+          <div v-if="historyList.length" @click="delAllHistory">全部删除</div>
         </div>
         <div class="option_box">
           <div class="city_option">
@@ -33,7 +33,7 @@
         </div>
         <div class="type_box">
           <van-tabs @click="changeType">
-            <van-tab v-for="(item, index) in projectList" :key="index" :title="item.name"></van-tab>
+            <van-tab v-for="(item, index) in typeList" :key="index" :title="item.name"></van-tab>
           </van-tabs>
         </div>
       </form>
@@ -43,7 +43,7 @@
       <van-pull-refresh v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
         <van-empty image="search" description="空空如也" v-if="info.length === 0" />
         <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad" v-else>
-          <Project v-for="item in info" :key="item" />
+          <Project v-for="item in info" :key="item.id" :info="item" />
         </van-list>
       </van-pull-refresh>
     </div>
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { getProjectList, } from '@/api/index.js'
 import CityPicker from '../../components/cityPicker.vue';
 import Project from '../../components/project.vue';
 export default {
@@ -63,12 +64,12 @@ export default {
       index: 0,
       showHistory: false,
       info: [],
-      historyList: ['1111111111111111111111111111111111111111111111111111', 2, 3, 4, 5],
+      historyList: JSON.parse(localStorage.getItem('history')) || [],
       searchData: {
         keyword: '',
         status: 'all',
         city: '',
-        type: ''
+        type: '0'
       },
       statusList: [
         {
@@ -100,7 +101,7 @@ export default {
           value: 'streamLabels'
         },
       ],
-      projectList: [
+      typeList: [
         {
           name: '所有',
           value: '0'
@@ -128,29 +129,32 @@ export default {
       ],
     };
   },
+  watch: {
+    historyList(newVal) {
+      if (newVal.length <= 0) {
+        this.showHistory = false
+      }
+    }
+  },
   methods: {
     onFocus() {
-      this.showHistory = true
+      if (this.historyList.length > 0) {
+        this.showHistory = true
+      }
     },
     onBlur() {
       // this.showHistory = false
     },
     delHistory(item) {
       this.historyList = this.historyList.filter((i) => i != item)
+      localStorage.setItem('history', JSON.stringify(this.historyList))
+    },
+    delAllHistory() {
+      this.historyList = []
+      localStorage.removeItem('history')
     },
     chooseHistory(item) {
       this.searchData.keyword = item
-      this.$toast.loading({
-        message: '加载中...',
-        forbidClick: true,
-        duration: 500
-      });
-      setTimeout(() => {
-        this.getList()
-        this.update = false;
-      }, 500)
-    },
-    onSearch() {
       this.showHistory = false
       this.$toast.loading({
         message: '加载中...',
@@ -158,6 +162,22 @@ export default {
         duration: 500
       });
       setTimeout(() => {
+        this.info = []
+        this.getList()
+        this.update = false;
+      }, 500)
+    },
+    onSearch() {
+      this.showHistory = false
+      this.historyList.push(this.searchData.keyword)
+      localStorage.setItem('history', JSON.stringify(this.historyList))
+      this.$toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+        duration: 500
+      });
+      setTimeout(() => {
+        this.info = []
         this.getList()
         this.update = false;
       }, 500)
@@ -173,6 +193,7 @@ export default {
         duration: 500
       });
       setTimeout(() => {
+        this.info = []
         this.getList()
         this.update = false;
       }, 500)
@@ -184,12 +205,13 @@ export default {
         duration: 500
       });
       setTimeout(() => {
+        this.info = []
         this.getList()
         this.update = false;
       }, 500)
     },
     changeType(name, title) {
-      const result = this.projectList.find((item) => item.name === title)
+      const result = this.typeList.find((item) => item.name === title)
       this.searchData.type = result.value
       // this.update = true
       this.$toast.loading({
@@ -198,6 +220,7 @@ export default {
         duration: 500
       });
       setTimeout(() => {
+        this.info = []
         this.getList()
       }, 500)
     },
@@ -206,41 +229,38 @@ export default {
     },
     //下拉刷新
     onRefresh() {
+      this.page++
       setTimeout(() => {
-        this.isLoading = false;
         this.getList(true)
-      }, 500);
+      }, 1000)
     },
     // 加载更多
     onLoad() {
+      this.page++
       setTimeout(() => {
-        if (this.refreshing) {
-          this.refreshing = false;
-        }
         this.getList()
-        this.loading = false;
-        if (this.info.length >= 60) {
-          this.finished = true;
-        }
-      }, 500);
+      }, 500)
     },
     getList(isDropDown = false) {
-      const data = Object.assign(this.searchData)
-      if (isDropDown) {
-        this.info = []
-        for (let i = 0; i < 15; i++) {
-          this.index++
-          this.info.unshift(this.index)
-        }
-      } else {
-        for (let i = 0; i < 15; i++) {
-          this.index++
-          this.info.push(this.index)
-        }
+      const obj = {
+        page: this.page,
+        limit: this.limit
       }
-      this.update = false
-      console.log(data);
-    }
+      const data = Object.assign(obj, this.searchData)
+      // 获取数据
+      getProjectList(data).then((res) => {
+        if (isDropDown) {
+          this.info = res
+        } else {
+          this.info = [...this.info, ...res]
+        }
+        this.loading = false;
+        this.isLoading = false;
+        if (this.info.length >= 40) {
+          this.finished = true;
+        }
+      })
+    },
   },
   created() {
     this.$toast.loading({
@@ -248,12 +268,7 @@ export default {
       forbidClick: true,
       duration: 500
     });
-    setTimeout(() => {
-      for (let i = 0; i < 15; i++) {
-        this.index++
-        this.info.push(this.index)
-      }
-    }, 500)
+    this.getList()
   },
   components: { CityPicker, Project }
 }

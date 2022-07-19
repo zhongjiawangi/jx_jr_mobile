@@ -73,7 +73,7 @@ export default {
       update: false,
       isLogin: localStorage.getItem('token') && true,
       columns: ['男', '女'],
-      userInfo: '',
+      userInfo: {},
       infoListDic: {
         photo: '我的头像',
         nickname: '昵称',

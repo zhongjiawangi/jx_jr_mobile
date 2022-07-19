@@ -2,7 +2,7 @@
   <div class="detail">
     <van-nav-bar title="项目详情" left-text="返回" left-arrow @click-left="onClickLeft" />
     <div class="info_box">
-      <p>{{ info.name || '项目名称' }}</p>
+      <p>{{ info.projectName || '项目名称' }}</p>
       <div class="simpleInfo">
         <div class="left">
           <div class="img">
@@ -10,7 +10,7 @@
           </div>
           <div class="contant">
             <div>
-              <span>{{ info.type || '项目类型' }}</span><span>【{{ info.area || '地区' }}】</span>
+              <span>{{ info.type.name || '项目类型' }}</span><span>【{{ info.area || '地区' }}】</span>
             </div>
             <div>公示时间：{{ info.time || '2022.12.12 00:00:00' }}</div>
           </div>
@@ -25,7 +25,7 @@
     <div class="tab">
       <van-tabs v-model="active" animated>
         <van-tab v-for="(item, index) in tabList" :title="item.title" :key="index">
-          <component :is="item.name" />
+          <component :is="item.name" :info="info" />
         </van-tab>
       </van-tabs>
     </div>
@@ -43,7 +43,9 @@ export default {
   components: { Introduce, Announcement, Bids, Publicity },
   data() {
     return {
-      info: [],
+      info: {
+        type: {}
+      },
       active: '0',
       like: false,
       tabList: [
@@ -89,16 +91,16 @@ export default {
         duration: 500
       })
     },
-    getProjectInfo() {
-      getProjectInfo().then((res) => {
-        console.log(res);
-        // this.info = res
+    getProjectInfo(id) {
+      getProjectInfo({ id: id }).then((res) => {
+        this.info = res[0]
       })
     }
   },
   created() {
-    // console.log(this.$route);
     window.scroll(0, 0);
+    const id = this.$route.query.id
+    this.getProjectInfo(id)
   }
 }
 </script>

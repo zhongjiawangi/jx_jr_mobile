@@ -7,7 +7,12 @@
 
 <script>
 export default {
-  name: 'publicityPage'
+  name: 'publicityPage',
+    props: {
+    info: {
+      default: {}
+    }
+  },
 }
 </script>
 

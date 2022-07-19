@@ -7,7 +7,12 @@
 
 <script>
 export default {
-  name: 'bidsPage'
+  name: 'bidsPage',
+    props: {
+    info: {
+      default: {}
+    }
+  },
 }
 </script>
 

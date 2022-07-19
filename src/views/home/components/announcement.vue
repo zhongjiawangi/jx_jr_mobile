@@ -12,9 +12,8 @@
 export default {
   name: 'announcementPage',
   props: {
-    url: {
-      type: String,
-      default: ''
+    info: {
+      default: {}
     }
   },
   methods: {

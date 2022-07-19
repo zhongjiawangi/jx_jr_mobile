@@ -1,5 +1,5 @@
 <template>
-  <div class="project" @click="goInfo(info.name)">
+  <div class="project" @click="goInfo(info.id)">
     <div class="top">
       <div class="left">
         <img src="@/assets/logo.png" alt="">
@@ -62,11 +62,11 @@ export default {
     }
   },
   methods: {
-    goInfo(info) {
+    goInfo(id) {
       this.$router.push({
         path: '/home/detail',
         query: {
-          name: info
+          id: id
         }
       })
     }
@@ -103,6 +103,13 @@ export default {
         align-items: center;
         justify-content: space-between;
         margin-bottom: 5px;
+
+        b {
+          white-space: nowrap;
+          width: 130px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
 
       .time {

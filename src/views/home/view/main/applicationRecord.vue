@@ -20,7 +20,7 @@ export default {
         },
     },
     created() {
-        console.log(this.$route.query.name);
+        // console.log(this.$route.query.name);
     }
 }
 </script>

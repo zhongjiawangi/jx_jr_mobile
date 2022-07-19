@@ -1,6 +1,7 @@
 <template>
   <div class="main">
     <van-nav-bar title="这里是标题" />
+    <img src="@/assets/img/home/gotop.png" class="gotop" @click="goTop" v-show="showTop" />
     <div class="tab">
       <div class="staus_box">
         <van-button icon="search" round @click="jumpSearch" />
@@ -10,7 +11,7 @@
       </div>
       <div class="type_box">
         <van-tabs @click="changeType">
-          <van-tab v-for="(item, index) in projectList" :key="index" :title="item.name"></van-tab>
+          <van-tab v-for="(item, index) in typeList" :key="index" :title="item.name"></van-tab>
         </van-tabs>
       </div>
 
@@ -21,7 +22,7 @@
         <div class="box">
           <van-notice-bar left-icon="volume-o" :scrollable="false" color="#1989fa" background="#ecf9ff">
             <van-swipe vertical class="notice-swipe" :autoplay="3000" :show-indicators="false">
-              <van-swipe-item v-for="(item, index) in noticeList" :key="index" @click="clickNotice(item)">{{ item.text
+              <van-swipe-item v-for="(item, index) in noticeList" :key="index" @click="clickNotice(item)">{{ item.title
               }}
               </van-swipe-item>
             </van-swipe>
@@ -47,7 +48,7 @@
 </template>
 
 <script>
-import { getProjectList, } from '@/api/index.js'
+import { getProjectList, getNoticeList } from '@/api/index.js'
 import Acticle from '@/views/home/components/project.vue'
 import CityPicker from '../../components/cityPicker.vue';
 export default {
@@ -58,6 +59,7 @@ export default {
   },
   data() {
     return {
+      showTop: false,
       page: 1,
       limit: 10,
       isLoading: false,
@@ -65,20 +67,8 @@ export default {
       finished: false,
       index: 0,
       info: [],
-      noticeList: [
-        {
-          text: '这是第一条通知',
-          id: 1
-        },
-        {
-          text: '这是第二条通知',
-          id: 2
-        },
-        {
-          text: '这是第三条通知',
-          id: 3
-        },
-      ],
+      timer: null,
+      noticeList: [],
       statusList: [
         {
           name: '全部',
@@ -109,7 +99,7 @@ export default {
           value: 'streamLabels'
         },
       ],
-      projectList: [
+      typeList: [
         {
           name: '所有',
           value: '0'
@@ -152,7 +142,7 @@ export default {
       searchData: {
         city: '',
         status: 'all',
-        type: '1'
+        type: '0'
       },
       scrollTop: 0
     }
@@ -165,6 +155,16 @@ export default {
     }
   },
   methods: {
+    goTop() {
+      this.timer = setInterval(() => {
+        let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        let step = Math.ceil(scrollTop / 10)
+        window.scroll(0, scrollTop - step)
+        if ((scrollTop - step) <= 0) {
+          clearInterval(this.timer)
+        }
+      }, 10)
+    },
     goLOI(item) {
       this.$router.push({
         path: '/home/loi',
@@ -206,40 +206,17 @@ export default {
     },
     //下拉刷新
     onRefresh() {
+      this.page++
       setTimeout(() => {
-        this.isLoading = false;
-        this.page++
         this.getList(true)
-      }, 500);
+      }, 1000)
     },
     // 加载更多
     onLoad() {
+      this.page++
       setTimeout(() => {
-        if (this.isLoading) {
-          return;
-        }
-        this.page++
         this.getList()
-
-        // 加载状态结束
-        this.loading = false;
-
-        // 数据全部加载完成
-        if (this.info.length >= 40) {
-          this.finished = true;
-        }
-      }, 1000);
-      // setTimeout(() => {
-      //   if (this.refreshing) {
-      //     this.refreshing = false;
-      //   }
-      //   this.page++
-      //   this.getList()
-      //   this.loading = false;
-      //   if (this.info.length >= 60) {
-      //     this.finished = true;
-      //   }
-      // }, 500);
+      }, 500)
     },
     changeStatus(name, title) {
       const result = this.statusList.find((item) => item.name === title)
@@ -256,7 +233,7 @@ export default {
       }, 500)
     },
     changeType(name, title) {
-      const result = this.projectList.find((item) => item.name === title)
+      const result = this.typeList.find((item) => item.name === title)
       this.searchData.type = result.value
       this.$toast.loading({
         message: '加载中...',
@@ -283,20 +260,12 @@ export default {
         } else {
           this.info = [...this.info, ...res]
         }
+        this.loading = false;
+        this.isLoading = false;
+        if (this.info.length >= 40) {
+          this.finished = true;
+        }
       })
-      // if (isDropDown) {
-      //   this.info = []
-      //   for (let i = 0; i < 15; i++) {
-      //     this.index++
-      //     this.info.unshift(this.index)
-      //   }
-      // } else {
-      //   for (let i = 0; i < 15; i++) {
-      //     this.index++
-      //     this.info.push(this.index)
-      //   }
-      // }
-      return isDropDown
     },
   },
   created() {
@@ -306,6 +275,19 @@ export default {
       duration: 500
     });
     this.getList()
+    getNoticeList().then((res) => {
+      this.noticeList = res.slice(0, 4)
+    })
+  },
+  mounted() {
+    window.addEventListener('scroll', () => {
+      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      if (scrollTop > 3000) {
+        this.showTop = true
+      } else {
+        this.showTop = false
+      }
+    })
   },
   activated() {
     window.scroll(0, this.scrollTop)
@@ -319,6 +301,15 @@ export default {
 
 <style lang="less" scoped>
 .main {
+  .gotop {
+    position: fixed;
+    width: 50px;
+    height: 50px;
+    right: 15px;
+    bottom: 150px;
+    z-index: 1000;
+  }
+
   .top {
     width: 100%;
     height: 40px;
@@ -350,6 +341,13 @@ export default {
   .notice-swipe {
     height: 40px;
     line-height: 40px;
+
+    /deep/.van-swipe-item {
+      width: 73%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
   .notice {

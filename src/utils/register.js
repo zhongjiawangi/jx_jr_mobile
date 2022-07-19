@@ -26,7 +26,7 @@ register.interceptors.request.use(
 register.interceptors.response.use(
   function (response) {
     // 对响应数据做点什么
-    const _data = response.data;
+    const _data = response.data || [];
     let Result = "";
     const { code, message } = _data;
     // console.log(_data);
@@ -34,7 +34,6 @@ register.interceptors.response.use(
       Notify(message);
       Result = Promise.reject(_data.data);
     } else {
-      Notify(message);
       Result = Promise.resolve(_data.data);
     }
     return Result;
@@ -47,10 +46,17 @@ register.interceptors.response.use(
 
 const servies = (methods, url, data) => {
   // 去除空参数
-  if (methods !== "post") {
-    // if (!data) return;
+  // if (methods !== "post") {
+  //   // if (!data) return;
+  //   for (let key in data) {
+  //     if (!data.key) {
+  //       delete data[key];
+  //     }
+  //   }
+  // }
+  if (data) {
     for (let key in data) {
-      if (!data.key) {
+      if (!data[key]) {
         delete data[key];
       }
     }
